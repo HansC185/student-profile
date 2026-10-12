@@ -31,7 +31,7 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['full_name', 'tagline', 'course', 'school', 'email',
-                  'bio', 'avatar', 'theme_color']
+                  'bio', 'avatar', 'theme_color', 'show_in_recent']
         labels = {
             'full_name': 'Full name',
             'tagline': 'Tagline',

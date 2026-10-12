@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
@@ -19,7 +19,7 @@ def get_profile(user):
 
 
 def home(request):
-    profiles = Profile.objects.select_related('user').order_by('-id')[:12]
+    profiles = Profile.objects.filter(show_in_recent=True).select_related('user').order_by('-id')[:12]
     return render(request, 'home.html', {'profiles': profiles})
 
 
@@ -106,3 +106,19 @@ def public_profile(request, username):
         'is_owner': request.user.is_authenticated and request.user == profile.user,
         'share_url': request.build_absolute_uri(request.path),
     })
+
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        user = request.user
+        profile = get_profile(user)
+        for photo in profile.photos.all():
+            photo.image.delete(save=False)
+        if profile.avatar:
+            profile.avatar.delete(save=False)
+        logout(request)
+        user.delete()
+        messages.success(request, 'Your account and profile were deleted.')
+        return redirect('home')
+    return render(request, 'delete_account.html')

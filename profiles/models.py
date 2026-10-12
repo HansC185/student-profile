@@ -11,6 +11,8 @@ THEMES = [
     ('#c2410c', 'Orange'),
     ('#15803d', 'Green'),
     ('#334155', 'Slate'),
+
+    
 ]
 
 
@@ -24,6 +26,8 @@ class Profile(models.Model):
     bio = models.TextField(blank=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True)
     theme_color = models.CharField(max_length=7, choices=THEMES, default='#0f766e')
+    show_in_recent = models.BooleanField('Show my profile in Recent profiles', default=True)
+
 
     @property
     def display_name(self):

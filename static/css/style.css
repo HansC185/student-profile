@@ -205,3 +205,5 @@ textarea { resize: vertical; }
 /* ---------- Owner bar on the public page ---------- */
 .owner-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; padding: .6rem 1.2rem; background: var(--surface); border-bottom: 1px solid var(--border); font-size: .9rem; }
 .owner-bar .spacer { flex: 1; }
+
+.btn-danger { background: var(--danger); border-color: var(--danger); }

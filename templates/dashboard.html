@@ -51,5 +51,10 @@
   </form>
 
   <p class="center"><a href="{% url 'manage' %}">Next: add skills, projects and photos</a></p>
+    <div class="card" style="margin-top:1.5rem">
+    <h3>Delete account</h3>
+    <p class="muted">Remove your profile and everything on it.</p>
+    <a href="{% url 'delete_account' %}" class="btn btn-danger">Delete my account</a>
+  </div>
 </section>
 {% endblock %}
