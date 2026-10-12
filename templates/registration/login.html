@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Log in{% endblock %}
+
+{% block content %}
+<section class="container narrow">
+  <h1>Log in</h1>
+  <form method="post" class="card" novalidate>
+    {% csrf_token %}
+    {% include 'includes/form_fields.html' %}
+    {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}">{% endif %}
+    <button type="submit" class="btn btn-block">Log in</button>
+  </form>
+  <p class="muted center">New here? <a href="{% url 'signup' %}">Create an account</a></p>
+</section>
+{% endblock %}

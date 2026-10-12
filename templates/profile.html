@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ profile.display_name }}{% endblock %}
+
+{% block navbar %}
+  {% if is_owner %}
+  <div class="owner-bar no-print">
+    <span class="muted">This is how visitors see your page.</span>
+    <span class="spacer"></span>
+    <a href="{% url 'dashboard' %}" class="btn btn-small btn-ghost">Edit profile</a>
+    <a href="{% url 'manage' %}" class="btn btn-small btn-ghost">My content</a>
+    <button type="button" class="btn btn-small btn-ghost" data-copy="{{ share_url }}">Copy link</button>
+    <button type="button" class="btn btn-small btn-ghost" id="print-btn">Print / Save as PDF</button>
+    <button type="button" class="btn btn-small btn-ghost" id="download-btn" data-filename="{{ profile.user.username|slugify }}-profile" data-lib="{% static 'js/html2canvas.min.js' %}">Download image</button>
+    <a href="{% url 'home' %}" class="btn btn-small">Home</a>
+  </div>
+  {% endif %}
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="profile-theme" style="--primary: {{ profile.theme_color }}">
+
+  <section class="profile-hero">
+    {% if profile.avatar %}
+      <img src="{{ profile.avatar.url }}" alt="{{ profile.display_name }}" class="avatar avatar-lg">
+    {% else %}
+      <div class="avatar avatar-lg avatar-ph">{{ profile.display_name|first|upper }}</div>
+    {% endif %}
+    <h1>{{ profile.display_name }}</h1>
+    {% if profile.tagline %}<p class="tagline" id="typing" data-text="{{ profile.tagline }}">{{ profile.tagline }}</p>{% endif %}
+    {% if profile.course or profile.school %}
+      <p class="muted">{{ profile.course }}{% if profile.course and profile.school %}, {% endif %}{{ profile.school }}</p>
+    {% endif %}
+    {% if profile.email %}
+      <div class="actions no-print">
+        <a href="mailto:{{ profile.email }}" class="btn">Email me</a>
+      </div>
+    {% endif %}
+  </section>
+
+  <div class="container">
+
+    {% if profile.bio %}
+      <h2>About</h2>
+      <div class="card"><p>{{ profile.bio|linebreaksbr }}</p></div>
+    {% endif %}
+
+    {% if profile.skills.all %}
+      <h2>Skills</h2>
+      <div class="card">
+        {% for s in profile.skills.all %}
+          <div class="skill">
+            <span>{{ s.name }} <small class="muted">{{ s.level }}%</small></span>
+            <div class="bar"><div class="fill" data-level="{{ s.level }}"></div></div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if profile.projects.all %}
+      <h2>Projects</h2>
+      <div class="project-grid">
+        {% for p in profile.projects.all %}
+          <div class="card">
+            <h3>{{ p.title }}</h3>
+            {% if p.description %}<p>{{ p.description }}</p>{% endif %}
+            {% if p.tech %}<small class="muted">{{ p.tech }}</small>{% endif %}
+            {% if p.link %}<p><a href="{{ p.link }}" target="_blank" rel="noopener">View project</a></p>{% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if profile.photos.all %}
+      <h2>Gallery</h2>
+      <div class="gallery-grid">
+        {% for photo in profile.photos.all %}
+          <figure class="photo">
+            <img src="{{ photo.image.url }}" alt="{{ photo.title|default:'Gallery photo' }}">
+            {% if photo.title %}<figcaption>{{ photo.title }}</figcaption>{% endif %}
+          </figure>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if is_owner and not profile.bio and not profile.skills.all and not profile.projects.all and not profile.photos.all %}
+      <div class="card center no-print">
+        <p>Your page is empty. <a href="{% url 'dashboard' %}">Fill in your profile</a> and <a href="{% url 'manage' %}">add some content</a>.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<div id="lightbox" class="lightbox" hidden><img id="lightbox-img" alt=""></div>
+<script src="{% static 'js/export.js' %}"></script>
+{% endblock %}

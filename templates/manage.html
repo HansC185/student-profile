@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}My content{% endblock %}
+
+{% block content %}
+<section class="container">
+  <h1>My content</h1>
+  <p class="muted">Everything you add here shows on <a href="{% url 'public_profile' user.username %}">your public page</a>.</p>
+
+  <div class="manage-grid">
+
+    <div class="card">
+      <h2>Skills</h2>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="kind" value="skill">
+        {% include 'includes/form_fields.html' with form=forms.skill %}
+        <button type="submit" class="btn">Add skill</button>
+      </form>
+      <ul class="item-list">
+        {% for s in skills %}
+          <li>
+            <span>{{ s.name }} <small class="muted">{{ s.level }}%</small></span>
+            <form method="post" action="{% url 'delete_item' 'skill' s.pk %}" class="inline-form" onsubmit="return confirm('Delete this skill?');">
+              {% csrf_token %}<button type="submit" class="del" aria-label="Delete skill">&times;</button>
+            </form>
+          </li>
+        {% empty %}
+          <li class="muted">No skills yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Projects</h2>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="kind" value="project">
+        {% include 'includes/form_fields.html' with form=forms.project %}
+        <button type="submit" class="btn">Add project</button>
+      </form>
+      <ul class="item-list">
+        {% for p in projects %}
+          <li>
+            <span>{{ p.title }}</span>
+            <form method="post" action="{% url 'delete_item' 'project' p.pk %}" class="inline-form" onsubmit="return confirm('Delete this project?');">
+              {% csrf_token %}<button type="submit" class="del" aria-label="Delete project">&times;</button>
+            </form>
+          </li>
+        {% empty %}
+          <li class="muted">No projects yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Photos</h2>
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="kind" value="photo">
+        {% include 'includes/form_fields.html' with form=forms.photo %}
+        <button type="submit" class="btn">Upload photo</button>
+      </form>
+      <ul class="item-list">
+        {% for ph in photos %}
+          <li>
+            <span class="photo-row"><img src="{{ ph.image.url }}" alt="" class="mini-thumb"> {{ ph.title|default:"Untitled" }}</span>
+            <form method="post" action="{% url 'delete_item' 'photo' ph.pk %}" class="inline-form" onsubmit="return confirm('Delete this photo?');">
+              {% csrf_token %}<button type="submit" class="del" aria-label="Delete photo">&times;</button>
+            </form>
+          </li>
+        {% empty %}
+          <li class="muted">No photos yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

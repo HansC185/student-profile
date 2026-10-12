@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Home{% endblock %} | Profile Maker</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <script>
+    try { if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark'); } catch (e) {}
+  </script>
+</head>
+<body>
+  {% block navbar %}{% include 'includes/navbar.html' %}{% endblock %}
+
+  <div class="toasts">
+    {% for message in messages %}
+      <div class="toast {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block footer %}{% include 'includes/footer.html' %}{% endblock %}
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

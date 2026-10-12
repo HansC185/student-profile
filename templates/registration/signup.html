@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Sign up{% endblock %}
+
+{% block content %}
+<section class="container narrow">
+  <h1>Create your account</h1>
+  <form method="post" class="card" novalidate>
+    {% csrf_token %}
+    {% include 'includes/form_fields.html' %}
+    <button type="submit" class="btn btn-block">Sign up</button>
+  </form>
+  <p class="muted center">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+</section>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<section class="container hero-home">
+  <div>
+    <h1>Make your student profile. Share it with one link.</h1>
+    <p class="lead">Create an account, add your skills, projects and photos, pick a color, and get a page of your own at <code>/u/yourname/</code>.</p>
+    <div class="actions">
+      {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}" class="btn">Edit my profile</a>
+        <a href="{% url 'public_profile' user.username %}" class="btn btn-ghost">View my page</a>
+      {% else %}
+        <a href="{% url 'signup' %}" class="btn">Create my profile</a>
+        <a href="{% url 'login' %}" class="btn btn-ghost">Log in</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="sample" aria-hidden="true">
+    <div class="sample-top">
+      <div class="avatar avatar-ph sample-avatar">Y</div>
+      <div>
+        <strong>Your Name</strong>
+        <small>BS Information Systems</small>
+      </div>
+    </div>
+    <div class="skill"><span>PIIS</span><div class="bar"><div class="fill" style="width:80%"></div></div></div>
+    <div class="skill"><span>HCI</span><div class="bar"><div class="fill" style="width:60%"></div></div></div>
+    <div class="skill"><span>Web Systems &amp; Technologies</span><div class="bar"><div class="fill" style="width:90%"></div></div></div>
+    <small class="muted">yoursite.com/u/juan/</small>
+  </div>
+</section>
+
+<section class="container">
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li><strong>Sign up.</strong> Pick a username. It becomes your link.</li>
+    <li><strong>Fill in your profile.</strong> Name, school, bio, photo and theme color.</li>
+    <li><strong>Add your content.</strong> Skills, projects and gallery photos.</li>
+    <li><strong>Share.</strong> Copy your link and send it to anyone.</li>
+  </ol>
+</section>
+
+<section class="container">
+  <h2>Recent profiles</h2>
+  <div class="member-grid">
+    {% for p in profiles %}
+      <a href="{% url 'public_profile' p.user.username %}" class="card member">
+        {% if p.avatar %}
+          <img src="{{ p.avatar.url }}" alt="" class="avatar avatar-sm">
+        {% else %}
+          <div class="avatar avatar-sm avatar-ph" style="--primary: {{ p.theme_color }}">{{ p.display_name|first|upper }}</div>
+        {% endif %}
+        <div>
+          <strong>{{ p.display_name }}</strong>
+          <small>{{ p.course|default:"Student" }}</small>
+        </div>
+      </a>
+    {% empty %}
+      <p class="muted">No profiles yet. Be the first to create one.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
