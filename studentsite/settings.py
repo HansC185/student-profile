@@ -3,9 +3,9 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-dev-key-change-this-before-deploying'
-DEBUG = False
-ALLOWED_HOSTS = ['studentprofile.pythonanywhere.com']  # fine for local demo; set real hosts when deploying
-CSRF_TRUSTED_ORIGINS = ['https://studentprofile.pythonanywhere.com']
+DEBUG = True
+ALLOWED_HOSTS = []  # fine for local demo; set real hosts when deploying
+CSRF_TRUSTED_ORIGINS = []
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -76,3 +76,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'home'
+
+# --- Local vs live settings ---
+# On PythonAnywhere the project lives under /home/, on your Windows laptop it doesn't.
+ON_SERVER = str(BASE_DIR).startswith('/home/')
+
+if ON_SERVER:
+    DEBUG = False
+    ALLOWED_HOSTS = ['yourusername.pythonanywhere.com']
+    CSRF_TRUSTED_ORIGINS = ['https://yourusername.pythonanywhere.com']
+else:
+    DEBUG = True
+    ALLOWED_HOSTS = ['*']
+    CSRF_TRUSTED_ORIGINS = []
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
